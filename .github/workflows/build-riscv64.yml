@@ -31,7 +31,10 @@ jobs:
       - name: Build wheel
         run: |
           . /tmp/build-venv/bin/activate
-          pip wheel . --no-build-isolation --wheel-dir /tmp/wheels/ \
+          # --no-deps: only build the llama_cpp_python wheel itself.
+          # Without it, pip tries to build numpy from source (no riscv64 wheel
+          # on PyPI), which needs meson-python -- not installed here.
+          pip wheel . --no-build-isolation --no-deps --wheel-dir /tmp/wheels/ \
             -C cmake.args="-DGGML_NATIVE=ON;-DLLAMA_BUILD_SERVER=OFF"
 
       - name: Verify platform tag
